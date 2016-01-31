@@ -1,6 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<wfInfo xmlns="http://www.w3schools.com"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<wfInfo xmlns="http://www.w3schools.com">
 	<workflow name="ArticleProduction">
 		<action name="Writing" type="simple" automInst="true">
 			<role>Journalist</role>

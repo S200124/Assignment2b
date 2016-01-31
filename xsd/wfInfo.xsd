@@ -15,21 +15,21 @@ elementFormDefault="qualified">
 	</xs:complexType>
 
 	<xs:complexType name="workflowType">
-		<xs:sequence>
+		<xs:choice maxOccurs="unbounded">
 			<xs:element name="action" type="actionType" maxOccurs="unbounded" minOccurs="1"></xs:element>
 			<xs:element name="process" type="processType" maxOccurs="unbounded" minOccurs="0"></xs:element>
-		</xs:sequence>
+		</xs:choice>
 		<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
 	</xs:complexType>
 
 	<xs:complexType name="actionType">
-		<xs:sequence>
+		<xs:choice maxOccurs="unbounded">
 			<xs:element ref="role" />
 			<xs:choice maxOccurs="1" minOccurs="0">
 				<xs:element name="followingActions" type="followingActionsType"></xs:element>
 				<xs:element name="nestedWorkflow" type="xs:string"></xs:element>
 			</xs:choice>
-		</xs:sequence>
+		</xs:choice>
 		<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
 		<xs:attribute name="type" type="typeEnumType" use="required"></xs:attribute>
 		<xs:attribute name="automInst" type="xs:boolean" use="required"></xs:attribute>
@@ -43,10 +43,10 @@ elementFormDefault="qualified">
 	</xs:complexType>
 
 	<xs:complexType name="actionStatusType">
-		<xs:sequence>
+		<xs:choice maxOccurs="unbounded">
 			<xs:element name="actor" type="actorType" maxOccurs="1" minOccurs="0"></xs:element>
 			<xs:element ref="actionName"/>
-		</xs:sequence>
+		</xs:choice>
 		<xs:attribute name="terminatedAt" type="xs:string"></xs:attribute>
 	</xs:complexType>
 

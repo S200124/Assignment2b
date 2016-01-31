@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<wfInfo xmlns="http://www.w3schools.com">
+    <workflow name="ArticleProduction">
+        <action automInst="false" name="Checking" type="simple">
+            <followingActions>
+                <actionName>Revising</actionName>
+                <actionName>Publication</actionName>
+            </followingActions>
+            <role>Editor</role>
+        </action>
+        <action automInst="true" name="Writing" type="simple">
+            <followingActions>
+                <actionName>Checking</actionName>
+            </followingActions>
+            <role>Journalist</role>
+        </action>
+        <action automInst="false" name="Revising" type="simple">
+            <followingActions>
+                <actionName>Checking</actionName>
+            </followingActions>
+            <role>Journalist</role>
+        </action>
+        <action automInst="false" name="Publication" type="simple">
+            <role>Editor</role>
+        </action>
+        <process startAt="Sat Oct 10 14:34:40 CEST 2015">
+            <actionStatus terminatedAt="11/10/2015 03:30">
+                <actionName>Writing</actionName>
+                <actor name="Corny Castigli">
+                    <role>Journalist</role>
+                </actor>
+            </actionStatus>
+            <actionStatus>
+                <actionName>Checking</actionName>
+            </actionStatus>
+        </process>
+        <process startAt="Tue Oct 13 16:32:40 CEST 2015">
+            <actionStatus terminatedAt="14/10/2015 02:34">
+                <actionName>Writing</actionName>
+                <actor name="Jerry Orafi">
+                    <role>Journalist</role>
+                </actor>
+            </actionStatus>
+            <actionStatus terminatedAt="14/10/2015 08:37">
+                <actionName>Checking</actionName>
+                <actor name="Claude Coleman">
+                    <role>Editor</role>
+                </actor>
+            </actionStatus>
+            <actionStatus terminatedAt="14/10/2015 09:38">
+                <actionName>Revising</actionName>
+                <actor name="Jerry Orafi">
+                    <role>Journalist</role>
+                </actor>
+            </actionStatus>
+            <actionStatus terminatedAt="16/10/2015 12:40">
+                <actionName>Checking</actionName>
+                <actor name="Maria Marini">
+                    <role>Editor</role>
+                </actor>
+            </actionStatus>
+            <actionStatus>
+                <actionName>Publication</actionName>
+            </actionStatus>
+        </process>
+        <process startAt="Tue Oct 06 17:19:40 CEST 2015">
+            <actionStatus terminatedAt="06/10/2015 06:34">
+                <actionName>Writing</actionName>
+                <actor name="Jerry Orafi">
+                    <role>Journalist</role>
+                </actor>
+            </actionStatus>
+            <actionStatus>
+                <actionName>Checking</actionName>
+                <actor name="Claude Coleman">
+                    <role>Editor</role>
+                </actor>
+            </actionStatus>
+        </process>
+    </workflow>
+</wfInfo>

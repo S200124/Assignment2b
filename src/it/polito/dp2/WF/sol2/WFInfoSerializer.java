@@ -12,20 +12,11 @@ import it.polito.dp2.WF.WorkflowReader;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Set;
-import java.util.List;
+import java.util.*;
 
 import java.io.File;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.bind.*;
 
 
 public class WFInfoSerializer {
@@ -56,8 +47,8 @@ public class WFInfoSerializer {
 	public static void main(String[] args) {
 		WFInfoSerializer wf;
 		try {
-			//String source = "dtd/file.xml";
-			String source = args[0];
+			String source = "xsd/file.xml";
+			//String source = args[0];
 			wf = new WFInfoSerializer();
 			wf.createXmlFile(source);
 			//wf.checkLibrary(source);
@@ -91,43 +82,24 @@ public class WFInfoSerializer {
 	{
 		try
 		{
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
+			WfInfo rootElement = appendData();
 			
-			DocumentType doctype = doc.getImplementation().createDocumentType("wfInfo", "", "wfInfo.dtd");
-			
-			// root element
-			Element rootElement = doc.createElement("wfInfo");
-			doc.appendChild(rootElement);
-			
-			if(appendData(doc, rootElement))
-			{
+			File file = new File(fileName);
+			JAXBContext jaxbContext = JAXBContext.newInstance(WfInfo.class);
+			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-			// write the content into XML file
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
-				Transformer transformer = transformerFactory.newTransformer();
-				transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
-				DOMSource source = new DOMSource(doc);
-				StreamResult result = new StreamResult(new File(fileName));
-				// Output to console for testing
-				// StreamResult result = new StreamResult(System.out);
-	
-				transformer.transform(source, result);
-			}
-		}
-		catch (ParserConfigurationException pce)
-		{
-			pce.printStackTrace();
-		}
-		catch (TransformerException tfe)
-		{
-			tfe.printStackTrace();
-		}
+			// output pretty printed
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+			jaxbMarshaller.marshal(rootElement, file);
+		 } catch (JAXBException e) {
+				e.printStackTrace();
+			      }
 	}
 
 
-	private void appendProcesses(Document doc, Element rootElement, String workflowName) {
+	private List<Process> appendProcesses(String workflowName) {
+		List<Process> ret = new ArrayList<Process>();
 		try
 		{
 			// Get the list of processes
@@ -138,10 +110,13 @@ public class WFInfoSerializer {
 			{
 				if(wfr.getWorkflow().getName() == workflowName)
 				{
-					Element process = doc.createElement("process");
-					rootElement.appendChild(process);
+					/*Element process = doc.createElement("process");
+					rootElement.appendChild(process);*/
+					Process prc = new Process();
+					List<ActionStatus> ass = new ArrayList<ActionStatus>();
 					
-					process.setAttribute("startAt", String.valueOf(wfr.getStartTime().getTime()));
+					prc.setStartAt(String.valueOf(wfr.getStartTime().getTime()));
+					//process.setAttribute("startAt", String.valueOf(wfr.getStartTime().getTime()));
 					/*System.out.println("Process started at " + 
 										dateFormat.format(wfr.getStartTime().getTime()) +
 							            " "+"- Workflow " + wfr.getWorkflow().getName());
@@ -150,51 +125,74 @@ public class WFInfoSerializer {
 	
 					for (ActionStatusReader asr : statusSet)
 					{
-						Element actionStatus = doc.createElement("actionStatus");
-						process.appendChild(actionStatus);
+						/*Element actionStatus = doc.createElement("actionStatus");
+						process.appendChild(actionStatus);*/
+						ActionStatus as = new ActionStatus();
+						
+						as.setActionName(asr.getActionName());
 						
 						//System.out.print(asr.getActionName()+"\t");
 						if (asr.isTakenInCharge())
 						{
-							Element actor = doc.createElement("actor");
-							actionStatus.appendChild(actor);
-							actor.setAttribute("name", asr.getActor().getName());
+							/*Element actor = doc.createElement("actor");
+							actionStatus.appendChild(actor);*/
+							Actor act = new Actor();
+							
+							act.setName(asr.getActor().getName());
+							act.setRole(asr.getActor().getRole());
+							
+							as.setActor(act);
+							//actor.setAttribute("name", asr.getActor().getName());
 							//System.out.print(asr.getActor().getName()+"\t\t");
-							Element role = doc.createElement("role");
+							/*Element role = doc.createElement("role");
 							role.appendChild(doc.createTextNode(asr.getActor().getRole()));
-							actor.appendChild(role);
+							actor.appendChild(role);*/
 						}
 						
-						Element actionName = doc.createElement("actionName");
+						/*Element actionName = doc.createElement("actionName");
 						actionName.appendChild(doc.createTextNode(asr.getActionName()));
-						actionStatus.appendChild(actionName);
+						actionStatus.appendChild(actionName);*/
 		
 						if (asr.isTerminated())
-							actionStatus.setAttribute("terminatedAt", String.valueOf(dateFormat.format(asr.getTerminationTime().getTime())));
+							as.setTerminatedAt(String.valueOf(dateFormat.format(asr.getTerminationTime().getTime())));
+							//actionStatus.setAttribute("terminatedAt", String.valueOf(dateFormat.format(asr.getTerminationTime().getTime())));
 							//System.out.println(dateFormat.format(asr.getTerminationTime().getTime()));
-		
+						
+						ass.add(as);
 					}
+					prc.setActionStatus(ass);
+					ret.add(prc);
 				}
 			}
+			return ret;
 		}
 		catch(Exception ex)
 		{
-			
+			return null;
 		}
 	}
 
 
-	private boolean appendData(Document doc, Element rootElement) {
+	private WfInfo appendData() {
 		try
 		{
+			WfInfo ret = new WfInfo();
+			List<Workflow> wfs = new ArrayList<Workflow>();
 			Set<WorkflowReader> set = monitor.getWorkflows();
+			
+			ret.setXmlns("http://www.w3schools.com");
 			
 			for (WorkflowReader wfr: set)
 			{
-				Element workflow = doc.createElement("workflow");
-				rootElement.appendChild(workflow);
+				/*Element workflow = doc.createElement("workflow");
+				rootElement.appendChild(workflow);*/
+				Workflow wf = new Workflow();
 				
-				workflow.setAttribute("name", wfr.getName());
+				List<Action> acts = new ArrayList<Action>();
+				
+				//workflow.setAttribute("name", wfr.getName());
+				wf.setName(wfr.getName());
+				wf.setProcess(appendProcesses(wfr.getName()));
 				
 				// Print actions
 				//System.out.println("Actions:");
@@ -202,50 +200,63 @@ public class WFInfoSerializer {
 				//printHeader("Action Name\tRole\t\tAutom.Inst.\tSimple/Process\tWorkflow\tNext Possible Actions");
 				for (ActionReader ar: setAct)
 				{
-					Element action = doc.createElement("action");
-					workflow.appendChild(action);
+					/*Element action = doc.createElement("action");
+					workflow.appendChild(action);*/
+					Action act = new Action();
 					
-					Element role = doc.createElement("role");
+					/*Element role = doc.createElement("role");
 					role.appendChild(doc.createTextNode(ar.getRole()));
-					action.appendChild(role);
+					action.appendChild(role);*/
+					act.setRole(ar.getRole());
 					
-					action.setAttribute("name", ar.getName());
-					action.setAttribute("automInst", String.valueOf(ar.isAutomaticallyInstantiated()));
+					//action.setAttribute("name", ar.getName());
+					act.setName(ar.getName());
+					//action.setAttribute("automInst", String.valueOf(ar.isAutomaticallyInstantiated()));
+					act.setAutomInst(String.valueOf(ar.isAutomaticallyInstantiated()));
 					
 					if (ar instanceof SimpleActionReader)
 					{
-						action.setAttribute("type", "simple");
+						//action.setAttribute("type", "simple");
+						act.setType("simple");
 						
 						Set<ActionReader> setNxt = ((SimpleActionReader)ar).getPossibleNextActions();
 						if(!setNxt.isEmpty())
 						{
-							Element followingActions = doc.createElement("followingActions");
-							action.appendChild(followingActions);
+							/*Element followingActions = doc.createElement("followingActions");
+							action.appendChild(followingActions);*/
+							FollowingActions fa = new FollowingActions();
+							List<String> fan = new ArrayList<String>();
 							
 							for (ActionReader nAct: setNxt)
-							{
-								Element actionName = doc.createElement("actionName");
+								fan.add(nAct.getName());
+								/*Element actionName = doc.createElement("actionName");
 								actionName.appendChild(doc.createTextNode(nAct.getName()));
-								followingActions.appendChild(actionName);
-							}
+								followingActions.appendChild(actionName);*/
+							fa.setActionName(fan);
+							act.setFollowingActions(fa);
 						}
 					}
 					else if (ar instanceof ProcessActionReader)
 					{
-						action.setAttribute("type", "process");
+						//action.setAttribute("type", "process");
+						act.setType("process");
+						act.setNestedWorkflow(((ProcessActionReader)ar).getActionWorkflow().getName());
 						
-						Element nestedWorkflow = doc.createElement("nestedWorkflow");
+						/*Element nestedWorkflow = doc.createElement("nestedWorkflow");
 						nestedWorkflow.setAttribute("workflowName", ((ProcessActionReader)ar).getActionWorkflow().getName());
-						action.appendChild(nestedWorkflow);
+						action.appendChild(nestedWorkflow);*/
 					}
+					acts.add(act);
 				}
-				appendProcesses(doc, workflow, wfr.getName());
+				wf.setAction(acts);
+				wfs.add(wf);
 			}
-			return true;
+			ret.setWorkflow(wfs);
+			return ret;
 		}
 		catch(Exception ex)
 		{
-			return false;
+			return null;
 		}
 	}
 	
