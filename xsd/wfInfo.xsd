@@ -1,66 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.w3schools.com"
+xmlns="http://www.w3schools.com"
+elementFormDefault="qualified">
 
-	<element name="root" type="tns:rootType"></element>
-	<element name="actionName" type="string"></element>
-	<element name="role" type="string"></element>
+	<xs:element name="wfInfo" type="wfInfoType"></xs:element>
+	<xs:element name="actionName" type="xs:string"></xs:element>
+	<xs:element name="role" type="xs:string"></xs:element>
     
-	<complexType name="rootType">
-		<element name="workflow" type="tns:workflowType" maxOccurs="unbounded" minOccurs="0"></element>
-	</complexType>
+	<xs:complexType name="wfInfoType">
+		<xs:sequence>
+			<xs:element name="workflow" type="workflowType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
 
-	<complexType name="workflowType">
-		<sequence>
-			<element name="action" type="tns:actionType" maxOccurs="unbounded" minOccurs="1"></element>
-			<element name="process"	type="tns:processType" maxOccurs="unbounded" minOccurs="0"></element>
-		</sequence>
-		<attribute name="name" type="string" use="required"></attribute>
-	</complexType>
+	<xs:complexType name="workflowType">
+		<xs:sequence>
+			<xs:element name="action" type="actionType" maxOccurs="unbounded" minOccurs="1"></xs:element>
+			<xs:element name="process"	type="processType" maxOccurs="unbounded" minOccurs="0"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+	</xs:complexType>
 
-	<complexType name="actionType">
-		<sequence>
-			<element ref="role" />
-			<choice maxOccurs="1" minOccurs="0">
-				<element name="followingActions" type="tns:followingActionsType"></element>
-				<element name="nestedWorkflow" type="tns:nestedWorkflowType"></element>
-			</choice>
-		</sequence>
-		<attribute name="name" type="string" use="required"></attribute>
-		<attribute name="type" type="typeEnumType" use="required"></attribute>
-		<attribute name="automInst" type="boolean" use="required"></attribute>
-	</complexType>
+	<xs:complexType name="actionType">
+		<xs:sequence>
+			<xs:element ref="role" />
+			<xs:choice maxOccurs="1" minOccurs="0">
+				<xs:element name="followingActions" type="followingActionsType"></xs:element>
+				<xs:element name="nestedWorkflow" type="nestedWorkflowType"></xs:element>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+		<xs:attribute name="type" type="typeEnumType" use="required"></xs:attribute>
+		<xs:attribute name="automInst" type="xs:boolean" use="required"></xs:attribute>
+	</xs:complexType>
 
-	<complexType name="processType">
-		<element name="actionStatus" type="tns:actionStatusType" maxOccurs="unbounded" minOccurs="1"></element>
-		<attribute name="startAt" type="string" use="required"></attribute>
-	</complexType>
+	<xs:complexType name="processType">
+		<xs:sequence>
+			<xs:element name="actionStatus" type="actionStatusType" maxOccurs="unbounded" minOccurs="1"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="startAt" type="xs:string" use="required"></xs:attribute>
+	</xs:complexType>
 
-	<complexType name="actionStatusType">
-		<sequence>
-			<element name="actor" type="tns:actorType" maxOccurs="1" minOccurs="0"></element>
-			<element ref="actionName"/>
-		</sequence>
-		<attribute name="terminatedAt" type="string"></attribute>
-	</complexType>
+	<xs:complexType name="actionStatusType">
+		<xs:sequence>
+			<xs:element name="actor" type="actorType" maxOccurs="1" minOccurs="0"></xs:element>
+			<xs:element ref="actionName"/>
+		</xs:sequence>
+		<xs:attribute name="terminatedAt" type="xs:string"></xs:attribute>
+	</xs:complexType>
 
-	<complexType name="followingActionsType">
-		<element ref="actionName" maxOccurs="unbounded" minOccurs="1" />
-	</complexType>
+	<xs:complexType name="followingActionsType">
+		<xs:sequence>
+			<xs:element ref="actionName" maxOccurs="unbounded" minOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
 
-	<complexType name="actorType">
-		<element ref="role" />
-		<attribute name="name" type="string" use="required"></attribute>
-	</complexType>
+	<xs:complexType name="actorType">
+		<xs:sequence>
+			<xs:element ref="role" />
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+	</xs:complexType>
     
-	<complexType name="nestedWorkflowType">
-		<attribute name="workflowName" type="string"/>
-	</complexType>
+	<xs:complexType name="nestedWorkflowType">
+		<xs:attribute name="workflowName" type="xs:string"/>
+	</xs:complexType>
 
-	<simpleType name="typeEnumType">
-		<restriction base="string">
-			<enumeration value="simple"/>
-			<enumeration value="process"/>
-		</restriction>
-	</simpleType>
+	<xs:simpleType name="typeEnumType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="simple"/>
+			<xs:enumeration value="process"/>
+		</xs:restriction>
+	</xs:simpleType>
 
-</schema>
+</xs:schema>

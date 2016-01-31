@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE wfInfo SYSTEM "wfInfo.dtd">
-<xr:root xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:schemaLocation="wfInfo.xsd">
+<wfInfo xmlns="http://www.w3schools.com"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<workflow name="ArticleProduction">
 		<action name="Writing" type="simple" automInst="true">
 			<role>Journalist</role>
@@ -62,4 +62,4 @@
 			<nestedWorkflow workflowName="Prepaid Sale" />
 		</action>
 	</workflow>		
-</root>
+</wfInfo>
