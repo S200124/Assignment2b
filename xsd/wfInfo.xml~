@@ -1,0 +1,65 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE wfInfo SYSTEM "wfInfo.dtd">
+<xr:root xmlns:xr="http://www.example.org/network/" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:schemaLocation="wfInfo.xsd">
+	<workflow name="ArticleProduction">
+		<action name="Writing" type="simple" automInst="true">
+			<role>Journalist</role>
+			<followingActions>
+				<actionName>Checking</actionName>
+			</followingActions>
+		</action>
+		<action name="Checking" type="simple" automInst="false">
+			<role>Editor</role>
+			<followingActions>
+				<actionName>Revising</actionName>
+				<actionName>Publication</actionName>
+			</followingActions>
+		</action>
+		<action name="Revising" type="simple" automInst="false">
+			<role>Journalist</role>
+			<followingActions> 
+				<actionName>Checking</actionName>
+			</followingActions>
+		</action>
+		<action name="Publication" type="simple" automInst="false">
+			<role>Editor</role>
+		</action>
+
+		<process startAt="Tue Oct 06 01:00:40 CEST 2015">
+			<actionStatus terminatedAt="06/10/2015 03:10">
+				<actor name="Jerry Castigli" >
+					<role>Journalist</role>
+				</actor>
+				<actionName>Writing</actionName>
+			</actionStatus>
+			<actionStatus  terminatedAt="06/10/2015 09:37">
+				<actor name="Richard Di Creo">
+					<role>Editor</role>
+				</actor>
+				<actionName>Checking</actionName>
+			</actionStatus>
+			<actionStatus>
+				<actionName>Revising</actionName>
+			</actionStatus>
+		</process>
+	</workflow>
+
+
+	<workflow name="SaleManagement">
+		<action name="Accept Order" type="simple" automInst="true">
+			<role>Salesman</role>
+			<followingActions>
+				<actionName>Checking</actionName>
+				<actionName>Revising</actionName>
+			</followingActions>
+		</action>
+		<action name="Checking" type="process" automInst="false">
+			<role>Sales Manager</role>
+			<nestedWorkflow workflowName="Normal Sale" />
+		</action>
+		<action name="Revising" type="process" automInst="false">
+			<role>Sales Manager</role>
+			<nestedWorkflow workflowName="Prepaid Sale" />
+		</action>
+	</workflow>		
+</root>
