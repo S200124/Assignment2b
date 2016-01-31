@@ -27,10 +27,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
-import org.w3c.dom.Element;
-
 
 public class WFInfoSerializer {
 	private WorkflowMonitor monitor;
@@ -102,7 +98,7 @@ public class WFInfoSerializer {
 			DocumentType doctype = doc.getImplementation().createDocumentType("wfInfo", "", "wfInfo.dtd");
 			
 			// root element
-			Element rootElement = doc.createElement("root");
+			Element rootElement = doc.createElement("wfInfo");
 			doc.appendChild(rootElement);
 			
 			if(appendData(doc, rootElement))
