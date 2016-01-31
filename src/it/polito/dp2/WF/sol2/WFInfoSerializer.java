@@ -47,8 +47,8 @@ public class WFInfoSerializer {
 	public static void main(String[] args) {
 		WFInfoSerializer wf;
 		try {
-			String source = "xsd/file.xml";
-			//String source = args[0];
+			//String source = "xsd/file.xml";
+			String source = args[0];
 			wf = new WFInfoSerializer();
 			wf.createXmlFile(source);
 			//wf.checkLibrary(source);
