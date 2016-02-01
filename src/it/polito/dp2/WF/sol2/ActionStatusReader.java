@@ -6,50 +6,45 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
-
-import org.w3c.dom.Node;
 
 public class ActionStatusReader implements it.polito.dp2.WF.ActionStatusReader {
 
-	private Node actionStat;
+	private ActionStatus actionStat;
 	
-	public ActionStatusReader(Node as)
+	public ActionStatusReader(ActionStatus as)
 	{
 		actionStat = as;
 	}
 	
 	@Override
 	public String getActionName() {
-		String actionName = WorkFlowModel.getNodeValue(WorkFlowModel.getActionName(actionStat));
-		if(actionName != null)
-			return actionName;
-		else
-			return "";
+		return actionStat.getActionName();
 	}
 
 	@Override
 	public Actor getActor() {
-		HashMap<String,String> attr = WorkFlowModel.getAttibutes(WorkFlowModel.getActor(actionStat));
-		String role = WorkFlowModel.getNodeValue(WorkFlowModel.getRole(WorkFlowModel.getActor(actionStat)));
-
-		if(role != null && attr.containsKey("name"))
+		if(actionStat.getActor() != null)
 		{
-			Actor act = new Actor(attr.get("name"),role);
-			return act;
+			String name = actionStat.getActor().getName();
+			String role = actionStat.getActor().getRole();
+	
+			if((name != null && !name.isEmpty()) && (role != null && !role.isEmpty()))
+			{
+				Actor act = new Actor(name, role);
+				return act;
+			}
 		}
-		else
-			return null;
+		
+		return null;
 	}
 
 	@Override
 	public Calendar getTerminationTime() {
-		HashMap<String,String> attr = WorkFlowModel.getAttibutes(actionStat);
 		try
 		{   //"yyyy.MM.dd G 'at' HH:mm:ss z"	2001.07.04 AD at 12:08:56 PDT
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 			Calendar cal  = Calendar.getInstance();
-			cal.setTime(df.parse(attr.get("terminatedAt")));
+			cal.setTime(df.parse(actionStat.getTerminatedAt()));
 			return cal;
 		}
 		catch (ParseException e)
@@ -68,8 +63,7 @@ public class ActionStatusReader implements it.polito.dp2.WF.ActionStatusReader {
 
 	@Override
 	public boolean isTerminated() {
-		HashMap<String,String> attr = WorkFlowModel.getAttibutes(actionStat);
-		if(attr.containsKey("terminatedAt"))
+		if(actionStat.getTerminatedAt() != null && !actionStat.getTerminatedAt().isEmpty())
 			return true;
 		else
 			return false;

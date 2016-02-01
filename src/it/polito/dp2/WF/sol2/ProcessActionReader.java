@@ -1,12 +1,10 @@
 package it.polito.dp2.WF.sol2;
 
-import org.w3c.dom.Node;
-
 public class ProcessActionReader extends ActionReader {
 
 	private String workflowName;
 	
-	public ProcessActionReader(Node act, String wfn) {
+	public ProcessActionReader(Action act, String wfn) {
 		super(act, wfn);
 		workflowName = wfn;
 	}

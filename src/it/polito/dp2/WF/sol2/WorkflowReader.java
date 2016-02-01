@@ -1,14 +1,12 @@
 package it.polito.dp2.WF.sol2;
 
 import java.util.*;
-import org.w3c.dom.*;
-
 
 public class WorkflowReader implements it.polito.dp2.WF.WorkflowReader {
 
-	private Node workflow;
+	private Workflow workflow;
 	
-	public WorkflowReader(Node wf)
+	public WorkflowReader(Workflow wf)
 	{
 		workflow = wf;
 	}
@@ -21,26 +19,23 @@ public class WorkflowReader implements it.polito.dp2.WF.WorkflowReader {
 	public Set<it.polito.dp2.WF.ActionReader> getActions() {
 		Set<it.polito.dp2.WF.ActionReader> ret = new HashSet<it.polito.dp2.WF.ActionReader>();
 		
-		for(Node currentNode:WorkFlowModel.allActions(workflow))
-			ret.add(new ActionReader(currentNode, getName()));
+		for(Action act:WorkFlowModel.allActions(workflow))
+			ret.add(new ActionReader(act, getName()));
 		
 		return ret;
 	}
 
 	@Override
 	public String getName() {
-		HashMap<String,String> attr = WorkFlowModel.getAttibutes(workflow);
-		return attr.get("name");
+		return workflow.getName();
 	}
 
 	@Override
 	public Set<it.polito.dp2.WF.ProcessReader> getProcesses() {
-		HashMap<String,String> attr = WorkFlowModel.getAttibutes(workflow);
-		String name = attr.get("name");
 		Set<it.polito.dp2.WF.ProcessReader> ret = new HashSet<it.polito.dp2.WF.ProcessReader>();
 		
-		for(Node currentNode:WorkFlowModel.whereProcesses(name))
-			ret.add(new ProcessReader(currentNode, name));
+		for(Process pr:WorkFlowModel.whereProcesses(workflow.getName()))
+			ret.add(new ProcessReader(pr, workflow.getName()));
 		
 		return ret;
 	}

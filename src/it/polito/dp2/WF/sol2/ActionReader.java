@@ -1,15 +1,11 @@
 package it.polito.dp2.WF.sol2;
 
-import java.util.HashMap;
-
-import org.w3c.dom.*;
-
 public class ActionReader implements it.polito.dp2.WF.ActionReader {
 	
-	private Node action;
+	private Action action;
 	private String workflowName;
 	
-	public ActionReader(Node act, String wfn)
+	public ActionReader(Action act, String wfn)
 	{
 		action = act;
 		workflowName = wfn;
@@ -22,23 +18,17 @@ public class ActionReader implements it.polito.dp2.WF.ActionReader {
 
 	@Override
 	public String getName() {
-		HashMap<String,String> attr = WorkFlowModel.getAttibutes(action);
-		return attr.get("name");
+		return action.getName();
 	}
 
 	@Override
 	public String getRole() {
-		String role = WorkFlowModel.getNodeValue(WorkFlowModel.getRole(action));
-		if(role != null)
-			return role;
-		else
-			return "";
+		return action.getRole();
 	}
 
 	@Override
 	public boolean isAutomaticallyInstantiated() {
-		HashMap<String,String> attr = WorkFlowModel.getAttibutes(action);
-		return Boolean.parseBoolean(attr.get("automInst"));
+		return Boolean.parseBoolean(action.getAutomInst());
 	}
 
 }

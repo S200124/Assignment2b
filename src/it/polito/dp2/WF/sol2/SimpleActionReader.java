@@ -2,14 +2,12 @@ package it.polito.dp2.WF.sol2;
 
 import java.util.*;
 
-import org.w3c.dom.Node;
-
 public class SimpleActionReader extends ActionReader {
 
-	private Node action;
+	private Action action;
 	private String workflowName;
 	
-	public SimpleActionReader(Node act, String wfn) {
+	public SimpleActionReader(Action act, String wfn) {
 		super(act, wfn);
 		action = act;
 		workflowName = wfn;
@@ -18,13 +16,10 @@ public class SimpleActionReader extends ActionReader {
 	public Set<ActionReader> getPossibleNextActions() {
 		Set<ActionReader> ret = new HashSet<ActionReader>();
 		
-		for(Node actionName:WorkFlowModel.followingActions(action))
-			for(Node actionNode:WorkFlowModel.allActions(WorkFlowModel.findWorkflow(workflowName)))
-			{
-				HashMap<String,String> attr = WorkFlowModel.getAttibutes(actionNode);
-				if(WorkFlowModel.getNodeValue(actionName) == attr.get("name"))
-					ret.add(new ActionReader(actionNode, workflowName));
-			}
+		for(String actionName:WorkFlowModel.followingActions(action))
+			for(Action act:WorkFlowModel.allActions(WorkFlowModel.findWorkflow(workflowName)))
+				if(actionName == act.getName())
+					ret.add(new ActionReader(act, workflowName));
 		
 		return ret;
 	}

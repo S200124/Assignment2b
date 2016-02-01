@@ -47,8 +47,8 @@ public class WFInfoSerializer {
 	public static void main(String[] args) {
 		WFInfoSerializer wf;
 		try {
-			//String source = "xsd/file.xml";
 			String source = args[0];
+			//String source = "xsd/file.xml";
 			wf = new WFInfoSerializer();
 			wf.createXmlFile(source);
 			//wf.checkLibrary(source);
@@ -61,18 +61,23 @@ public class WFInfoSerializer {
 	
 	/*private void checkLibrary(String fileName)
 	{
-		System.setProperty("it.polito.dp2.WF.WorkflowMonitorFactory", "it.polito.dp2.WF.sol1.WorkflowMonitorFactory");
-		System.setProperty("it.polito.dp2.WF.sol1.WFInfo.file", fileName);
+		System.setProperty("it.polito.dp2.WF.WorkflowMonitorFactory", "it.polito.dp2.WF.sol2.WorkflowMonitorFactory");
+		System.setProperty("it.polito.dp2.WF.sol2.WFInfo.file", fileName);
 		
 		try {
 			WorkflowMonitor testWorkflowMonitor = WorkflowMonitorFactory.newInstance().newWorkflowMonitor();
-			for(ProcessReader process:testWorkflowMonitor.getProcesses())
-				System.out.println(String.valueOf(process.getStartTime()));
+
+			for(ProcessReader ts:testWorkflowMonitor.getProcesses())
+			{
+				System.out.println(ts.getStartTime().getWeekYear());
+				for(ActionStatusReader as:ts.getStatus())
+				{
+					System.out.println(as.getActionName() + " " + as.getTerminationTime().getWeekYear());
+					System.out.println(as.getActor().getName() + " " + as.getActor().getRole());
+				}
+			}
 			
 		} catch (WorkflowMonitorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FactoryConfigurationError e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -180,7 +185,7 @@ public class WFInfoSerializer {
 			List<Workflow> wfs = new ArrayList<Workflow>();
 			Set<WorkflowReader> set = monitor.getWorkflows();
 			
-			ret.setXmlns("http://www.w3schools.com");
+			//ret.setXmlns("http://www.w3schools.com");
 			
 			for (WorkflowReader wfr: set)
 			{
