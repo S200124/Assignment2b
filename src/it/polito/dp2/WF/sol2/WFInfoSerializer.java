@@ -159,7 +159,8 @@ public class WFInfoSerializer {
 						actionStatus.appendChild(actionName);*/
 		
 						if (asr.isTerminated())
-							as.setTerminatedAt(String.valueOf(dateFormat.format(asr.getTerminationTime().getTime())));
+							as.setTerminatedAt(String.valueOf(asr.getTerminationTime().getTimeInMillis()));
+							//as.setTerminatedAt(String.valueOf(dateFormat.format(asr.getTerminationTime().getTime())));
 							//actionStatus.setAttribute("terminatedAt", String.valueOf(dateFormat.format(asr.getTerminationTime().getTime())));
 							//System.out.println(dateFormat.format(asr.getTerminationTime().getTime()));
 						
