@@ -52,19 +52,24 @@ public final class WorkFlowModel {
 	public static List<Process> whereProcesses(String workflowName)
 	{
 		List<Process> ret = new ArrayList<Process>();
+		List<Process> lap = allProcesses();
 		
-		for(Process pr:allProcesses())
-			if(pr.getWorkflowName().trim().equals(workflowName))
-				ret.add(pr);
+		if(lap != null && !lap.isEmpty())
+			for(Process pr:lap)
+				if(pr.getWorkflowName().trim().equals(workflowName))
+					ret.add(pr);
 		
 		return ret;
 	}
 	
 	public static Workflow findWorkflow(String name)
 	{	
-		for(Workflow wf:allWorkflow())
-			if(wf.getName().trim().equals(name))
-				return wf;
+		List<Workflow> law = allWorkflow();
+		
+		if(law != null && !law.isEmpty())
+			for(Workflow wf:law)
+				if(wf.getName().trim().equals(name))
+					return wf;
 		
 		return null;
 	}

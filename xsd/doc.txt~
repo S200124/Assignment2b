@@ -1,0 +1,8 @@
+In root element, I append both "Workflows" and "Processes".
+A process is linked to a workflow by the Workflow name (it is unique).
+
+In workflow there can be more actions and, for each one, there can be:
+- following actions, if parent is a simple action;
+- a nested workflow, represented by the name, if parent is a process action.
+
+In process there can be more actions (in here they are called "actionStatus") and each one contains the actor who take care about that.
