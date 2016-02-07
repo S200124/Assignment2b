@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Process {
 
 	private String startAt;
+	private String workflowName;
 	private List<ActionStatus> actionStatus;
 	
 	public String getStartAt() {
@@ -19,6 +20,15 @@ public class Process {
 	@XmlAttribute
 	public void setStartAt(String startAt) {
 		this.startAt = startAt;
+	}
+	
+	public String getWorkflowName() {
+		return workflowName;
+	}
+
+	@XmlAttribute
+	public void setWorkflowName(String workflowName) {
+		this.workflowName = workflowName;
 	}
 	
 	public List<ActionStatus> getActionStatus() {

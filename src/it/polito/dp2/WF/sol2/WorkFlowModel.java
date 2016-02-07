@@ -11,7 +11,7 @@ public final class WorkFlowModel {
 	
 	private WorkFlowModel() {}
 	
-	private static WfInfo getRootNode()
+	public static WfInfo getRootNode()
 	{
 		try
 		{
@@ -31,22 +31,33 @@ public final class WorkFlowModel {
 	
 	public static List<Workflow> allWorkflow()
 	{
-		return getRootNode().getWorkflow();
+		try {
+			return getRootNode().getWorkflow();
+		}
+		catch(Exception ex) {
+			return null;
+		}
 	}
 	
 	public static List<Process> allProcesses()
-	{
-		List<Process> ret = new ArrayList<Process>();
-		
-		for(Workflow wf:allWorkflow())
-			ret.addAll(wf.getProcess());
-		
-		return ret;
+	{	
+		try {
+			return getRootNode().getProcess();
+		}
+		catch(Exception ex) {
+			return null;
+		}
 	}
 	
 	public static List<Process> whereProcesses(String workflowName)
 	{
-		return findWorkflow(workflowName).getProcess();
+		List<Process> ret = new ArrayList<Process>();
+		
+		for(Process pr:allProcesses())
+			if(pr.getWorkflowName().trim().equals(workflowName))
+				ret.add(pr);
+		
+		return ret;
 	}
 	
 	public static Workflow findWorkflow(String name)

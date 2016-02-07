@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<wfInfo xmlns="http://www.w3schools.com">
+    <process startAt="1445279740000" workflowName="ArticleProduction">
+        <actionStatus terminatedAt="1445435740000">
+            <actionName>Writing</actionName>
+            <actor name="Franco Carpe">
+                <role>Journalist</role>
+            </actor>
+        </actionStatus>
+        <actionStatus>
+            <actionName>Checking</actionName>
+            <actor name="Marco Menegai">
+                <role>Editor</role>
+            </actor>
+        </actionStatus>
+    </process>
+    <process startAt="1444991380000" workflowName="ArticleProduction">
+        <actionStatus terminatedAt="1445025460000">
+            <actionName>Writing</actionName>
+            <actor name="Paola Fumagai">
+                <role>Journalist</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1445178520000">
+            <actionName>Checking</actionName>
+            <actor name="Eva Del Saio">
+                <role>Editor</role>
+            </actor>
+        </actionStatus>
+        <actionStatus>
+            <actionName>Publication</actionName>
+        </actionStatus>
+    </process>
+    <process startAt="1444732720000" workflowName="ArticleProduction">
+        <actionStatus terminatedAt="1444756780000">
+            <actionName>Writing</actionName>
+            <actor name="Franco Carpe">
+                <role>Journalist</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1444839400000">
+            <actionName>Checking</actionName>
+            <actor name="Marco Menegai">
+                <role>Editor</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1444997140000">
+            <actionName>Revising</actionName>
+            <actor name="Pippo Piceni">
+                <role>Journalist</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1445163040000">
+            <actionName>Checking</actionName>
+            <actor name="Eva Del Saio">
+                <role>Editor</role>
+            </actor>
+        </actionStatus>
+        <actionStatus>
+            <actionName>Revising</actionName>
+        </actionStatus>
+    </process>
+    <process startAt="1444747660000" workflowName="ArticleProduction">
+        <actionStatus terminatedAt="1444856380000">
+            <actionName>Writing</actionName>
+            <actor name="Franco Carpe">
+                <role>Journalist</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1444960900000">
+            <actionName>Checking</actionName>
+            <actor name="Marco Menegai">
+                <role>Editor</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1445060140000">
+            <actionName>Publication</actionName>
+            <actor name="Franco Baldo">
+                <role>Editor</role>
+            </actor>
+        </actionStatus>
+    </process>
+    <process startAt="1444137760000" workflowName="ArticleProduction">
+        <actionStatus terminatedAt="1444138000000">
+            <actionName>Writing</actionName>
+            <actor name="Pippo Piceni">
+                <role>Journalist</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1444206520000">
+            <actionName>Checking</actionName>
+            <actor name="Eva Del Saio">
+                <role>Editor</role>
+            </actor>
+        </actionStatus>
+        <actionStatus>
+            <actionName>Publication</actionName>
+            <actor name="Franco Baldo">
+                <role>Editor</role>
+            </actor>
+        </actionStatus>
+    </process>
+    <process startAt="1444458340000" workflowName="ArticleProduction">
+        <actionStatus terminatedAt="1444556740000">
+            <actionName>Writing</actionName>
+            <actor name="Pippo Piceni">
+                <role>Journalist</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1444707880000">
+            <actionName>Checking</actionName>
+            <actor name="Marco Menegai">
+                <role>Editor</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1444849960000">
+            <actionName>Publication</actionName>
+            <actor name="Marco Menegai">
+                <role>Editor</role>
+            </actor>
+        </actionStatus>
+    </process>
+    <workflow name="ArticleProduction">
+        <action automInst="false" name="Publication" type="simple">
+            <role>Editor</role>
+        </action>
+        <action automInst="false" name="Checking" type="simple">
+            <followingActions>
+                <actionName>Revising</actionName>
+                <actionName>Publication</actionName>
+            </followingActions>
+            <role>Editor</role>
+        </action>
+        <action automInst="true" name="Writing" type="simple">
+            <followingActions>
+                <actionName>Checking</actionName>
+            </followingActions>
+            <role>Journalist</role>
+        </action>
+        <action automInst="false" name="Revising" type="simple">
+            <followingActions>
+                <actionName>Checking</actionName>
+            </followingActions>
+            <role>Journalist</role>
+        </action>
+    </workflow>
+</wfInfo>

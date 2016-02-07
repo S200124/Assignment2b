@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class WfInfo {
 	
 	private List<Workflow> workflow;
+	private List<Process> process;
 
 	public List<Workflow> getWorkflow() {
 		return workflow;
@@ -18,6 +19,15 @@ public class WfInfo {
 	@XmlElement
 	public void setWorkflow(List<Workflow> workflow) {
 		this.workflow = workflow;
+	}
+	
+	public List<Process> getProcess() {
+		return process;
+	}
+
+	@XmlElement
+	public void setProcess(List<Process> process) {
+		this.process = process;
 	}
 
 }

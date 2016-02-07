@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<wfInfo xmlns="http://www.w3schools.com">
+    <workflow name="ArticleProduction">
+        <action automInst="true" name="Writing" type="simple">
+            <followingActions>
+                <actionName>Checking</actionName>
+            </followingActions>
+            <role>Journalist</role>
+        </action>
+        <action automInst="false" name="Publication" type="simple">
+            <role>Editor</role>
+        </action>
+        <action automInst="false" name="Revising" type="simple">
+            <followingActions>
+                <actionName>Checking</actionName>
+            </followingActions>
+            <role>Journalist</role>
+        </action>
+        <action automInst="false" name="Checking" type="simple">
+            <followingActions>
+                <actionName>Revising</actionName>
+                <actionName>Publication</actionName>
+            </followingActions>
+            <role>Editor</role>
+        </action>
+    </workflow>
+</wfInfo>

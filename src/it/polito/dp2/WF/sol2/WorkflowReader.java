@@ -18,9 +18,11 @@ public class WorkflowReader implements it.polito.dp2.WF.WorkflowReader {
 	@Override
 	public Set<it.polito.dp2.WF.ActionReader> getActions() {
 		Set<it.polito.dp2.WF.ActionReader> ret = new HashSet<it.polito.dp2.WF.ActionReader>();
+		List<Action> lact = WorkFlowModel.allActions(workflow);
 		
-		for(Action act:WorkFlowModel.allActions(workflow))
-			ret.add(new ActionReader(act, getName()));
+		if(lact != null)
+			for(Action act:lact)
+				ret.add(new ActionReader(act, getName()));
 		
 		return ret;
 	}
@@ -33,9 +35,11 @@ public class WorkflowReader implements it.polito.dp2.WF.WorkflowReader {
 	@Override
 	public Set<it.polito.dp2.WF.ProcessReader> getProcesses() {
 		Set<it.polito.dp2.WF.ProcessReader> ret = new HashSet<it.polito.dp2.WF.ProcessReader>();
+		List<Process> lpr = WorkFlowModel.whereProcesses(workflow.getName());
 		
-		for(Process pr:WorkFlowModel.whereProcesses(workflow.getName()))
-			ret.add(new ProcessReader(pr, workflow.getName()));
+		if(!lpr.isEmpty())
+			for(Process pr:lpr)
+				ret.add(new ProcessReader(pr));
 		
 		return ret;
 	}

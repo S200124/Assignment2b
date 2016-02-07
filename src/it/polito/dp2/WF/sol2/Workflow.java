@@ -11,7 +11,6 @@ public class Workflow {
 
 	private String name;
 	private List<Action> action;
-	private List<Process> process;
 	
 	public String getName() {
 		return name;
@@ -29,14 +28,5 @@ public class Workflow {
 	@XmlElement
 	public void setAction(List<Action> action) {
 		this.action = action;
-	}
-	
-	public List<Process> getProcess() {
-		return process;
-	}
-
-	@XmlElement
-	public void setProcess(List<Process> process) {
-		this.process = process;
 	}
 }

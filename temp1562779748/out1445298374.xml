@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<wfInfo xmlns="http://www.w3schools.com">
+    <process startAt="1445514760000" workflowName="SaleManagement">
+        <actionStatus terminatedAt="1445659780000">
+            <actionName>AcceptOrder</actionName>
+            <actor name="Richard Li Ming">
+                <role>Salesman</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1445792560000">
+            <actionName>NormalSale</actionName>
+            <actor name="Paola Li Ming">
+                <role>SalesManager</role>
+            </actor>
+        </actionStatus>
+    </process>
+    <process startAt="1444939180000" workflowName="NormalSale">
+        <actionStatus terminatedAt="1445191060000">
+            <actionName>GoodsDelivery</actionName>
+            <actor name="Marta Leston">
+                <role>Warehouseman</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1445060440000">
+            <actionName>InvoiceIssuance</actionName>
+            <actor name="Maura Lanfra">
+                <role>Accountingman</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1445178520000">
+            <actionName>PaymentReception</actionName>
+            <actor name="Maura Lanfra">
+                <role>Accountingman</role>
+            </actor>
+        </actionStatus>
+    </process>
+    <process startAt="1444444120000" workflowName="ArticleProduction">
+        <actionStatus terminatedAt="1444604260000">
+            <actionName>Writing</actionName>
+            <actor name="Andrew Tasca">
+                <role>Journalist</role>
+            </actor>
+        </actionStatus>
+        <actionStatus>
+            <actionName>Checking</actionName>
+        </actionStatus>
+    </process>
+    <process startAt="1445226940000" workflowName="PrepaidSale">
+        <actionStatus>
+            <actionName>InvoiceIssuance</actionName>
+        </actionStatus>
+    </process>
+    <process startAt="1444011280000" workflowName="NormalSale">
+        <actionStatus terminatedAt="1444017940000">
+            <actionName>GoodsDelivery</actionName>
+            <actor name="Marta Leston">
+                <role>Warehouseman</role>
+            </actor>
+        </actionStatus>
+        <actionStatus terminatedAt="1444097560000">
+            <actionName>InvoiceIssuance</actionName>
+            <actor name="Maura Lanfra">
+                <role>Accountingman</role>
+            </actor>
+        </actionStatus>
+        <actionStatus>
+            <actionName>PaymentReception</actionName>
+        </actionStatus>
+    </process>
+    <process startAt="1444099360000" workflowName="ArticleProduction">
+        <actionStatus>
+            <actionName>Writing</actionName>
+        </actionStatus>
+    </process>
+    <process startAt="1444609420000" workflowName="PrepaidSale">
+        <actionStatus terminatedAt="1444684840000">
+            <actionName>InvoiceIssuance</actionName>
+            <actor name="Maura Lanfra">
+                <role>Accountingman</role>
+            </actor>
+        </actionStatus>
+        <actionStatus>
+            <actionName>PaymentReception</actionName>
+        </actionStatus>
+    </process>
+    <workflow name="NormalSale">
+        <action automInst="false" name="PaymentReception" type="simple">
+            <role>Accountingman</role>
+        </action>
+        <action automInst="true" name="InvoiceIssuance" type="simple">
+            <followingActions>
+                <actionName>PaymentReception</actionName>
+            </followingActions>
+            <role>Accountingman</role>
+        </action>
+        <action automInst="true" name="GoodsDelivery" type="simple">
+            <role>Warehouseman</role>
+        </action>
+    </workflow>
+    <workflow name="ArticleProduction">
+        <action automInst="false" name="Checking" type="simple">
+            <followingActions>
+                <actionName>Revising</actionName>
+                <actionName>Publication</actionName>
+            </followingActions>
+            <role>Editor</role>
+        </action>
+        <action automInst="true" name="Writing" type="simple">
+            <followingActions>
+                <actionName>Checking</actionName>
+            </followingActions>
+            <role>Journalist</role>
+        </action>
+        <action automInst="false" name="Revising" type="simple">
+            <followingActions>
+                <actionName>Checking</actionName>
+            </followingActions>
+            <role>Journalist</role>
+        </action>
+        <action automInst="false" name="Publication" type="simple">
+            <role>Editor</role>
+        </action>
+    </workflow>
+    <workflow name="PrepaidSale">
+        <action automInst="false" name="GoodsDelivery" type="simple">
+            <role>Warehouseman</role>
+        </action>
+        <action automInst="false" name="PaymentReception" type="simple">
+            <followingActions>
+                <actionName>GoodsDelivery</actionName>
+            </followingActions>
+            <role>Accountingman</role>
+        </action>
+        <action automInst="true" name="InvoiceIssuance" type="simple">
+            <followingActions>
+                <actionName>PaymentReception</actionName>
+            </followingActions>
+            <role>Accountingman</role>
+        </action>
+    </workflow>
+    <workflow name="SaleManagement">
+        <action automInst="true" name="AcceptOrder" type="simple">
+            <followingActions>
+                <actionName>PrepaidSale</actionName>
+                <actionName>NormalSale</actionName>
+            </followingActions>
+            <role>Salesman</role>
+        </action>
+        <action automInst="false" name="NormalSale" type="process">
+            <nestedWorkflow>NormalSale</nestedWorkflow>
+            <role>SalesManager</role>
+        </action>
+        <action automInst="false" name="PrepaidSale" type="process">
+            <nestedWorkflow>PrepaidSale</nestedWorkflow>
+            <role>SalesManager</role>
+        </action>
+    </workflow>
+</wfInfo>

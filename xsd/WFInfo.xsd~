@@ -9,10 +9,10 @@ elementFormDefault="qualified">
 	<xsd:element name="role" type="xsd:string"></xsd:element>
     
 	<xsd:complexType name="wfInfoType">
-		<xsd:choice maxOccurs="unbounded">
+		<xsd:sequence>
 			<xsd:element name="workflow" type="workflowType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
 			<xsd:element name="process" type="processType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
-		</xsd:choice>
+		</xsd:sequence>
 	</xsd:complexType>
 
 	<xsd:complexType name="workflowType">

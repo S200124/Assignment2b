@@ -8,10 +8,11 @@ public class WorkflowMonitor implements it.polito.dp2.WF.WorkflowMonitor {
 	@Override
 	public Set<it.polito.dp2.WF.ProcessReader> getProcesses() {
 		Set<it.polito.dp2.WF.ProcessReader> ret = new HashSet<it.polito.dp2.WF.ProcessReader>();
+		List<Process> lpr = WorkFlowModel.allProcesses();
 		
-		for(Workflow wf:WorkFlowModel.allWorkflow())
-			for(Process pr:WorkFlowModel.whereProcesses(wf.getName()))
-				ret.add(new ProcessReader(pr, wf.getName()));
+		if(lpr != null)
+			for(Process pr:lpr)
+				ret.add(new ProcessReader(pr));
 		
 		return ret;
 	}
@@ -24,9 +25,11 @@ public class WorkflowMonitor implements it.polito.dp2.WF.WorkflowMonitor {
 	@Override
 	public Set<it.polito.dp2.WF.WorkflowReader> getWorkflows() {
 		Set<it.polito.dp2.WF.WorkflowReader> ret = new HashSet<it.polito.dp2.WF.WorkflowReader>();
+		List<Workflow> lwf = WorkFlowModel.allWorkflow();
 		
-		for(Workflow wf:WorkFlowModel.allWorkflow())
-			ret.add(new WorkflowReader(wf));
+		if(lwf != null)
+			for(Workflow wf:lwf)
+				ret.add(new WorkflowReader(wf));
 		
 		return ret;
 	}

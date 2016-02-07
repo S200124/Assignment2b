@@ -29,7 +29,6 @@ public class WFInfoSerializer {
 	 * @throws WorkflowMonitorException 
 	 */
 	public WFInfoSerializer() throws WorkflowMonitorException {
-		System.setProperty("it.polito.dp2.WF.WorkflowMonitorFactory", "it.polito.dp2.WF.Random.WorkflowMonitorFactoryImpl");
 		WorkflowMonitorFactory factory = WorkflowMonitorFactory.newInstance();
 		monitor = factory.newWorkflowMonitor();
 		dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
@@ -61,18 +60,17 @@ public class WFInfoSerializer {
 	
 	/*private void checkLibrary(String fileName)
 	{
-		System.setProperty("it.polito.dp2.WF.WorkflowMonitorFactory", "it.polito.dp2.WF.sol2.WorkflowMonitorFactory");
-		System.setProperty("it.polito.dp2.WF.sol2.WFInfo.file", fileName);
+		//System.setProperty("it.polito.dp2.WF.WorkflowMonitorFactory", "it.polito.dp2.WF.Random.WorkflowMonitorFactoryImpl");
 		
 		try {
 			WorkflowMonitor testWorkflowMonitor = WorkflowMonitorFactory.newInstance().newWorkflowMonitor();
 
 			for(ProcessReader ts:testWorkflowMonitor.getProcesses())
 			{
-				System.out.println(ts.getStartTime().getWeekYear());
+				System.out.println(ts.getStartTime());
 				for(ActionStatusReader as:ts.getStatus())
 				{
-					System.out.println(as.getActionName() + " " + as.getTerminationTime().getWeekYear());
+					System.out.println(as.getActionName() + " " + as.getTerminationTime());
 					System.out.println(as.getActor().getName() + " " + as.getActor().getRole());
 				}
 			}
@@ -87,7 +85,7 @@ public class WFInfoSerializer {
 	{
 		try
 		{
-			WfInfo rootElement = appendData();
+			WfInfo rootElement = appendWorkflows();
 			
 			File file = new File(fileName);
 			JAXBContext jaxbContext = JAXBContext.newInstance(WfInfo.class);
@@ -103,167 +101,100 @@ public class WFInfoSerializer {
 	}
 
 
-	private List<Process> appendProcesses(String workflowName) {
+	private List<Process> appendProcesses() {
 		List<Process> ret = new ArrayList<Process>();
-		try
-		{
-			// Get the list of processes
-			Set<ProcessReader> set = monitor.getProcesses();
-			
-			// For each process print related data
-			for (ProcessReader wfr: set)
-			{
-				if(wfr.getWorkflow().getName() == workflowName)
-				{
-					/*Element process = doc.createElement("process");
-					rootElement.appendChild(process);*/
-					Process prc = new Process();
-					List<ActionStatus> ass = new ArrayList<ActionStatus>();
-					
-					prc.setStartAt(String.valueOf(wfr.getStartTime().getTime()));
-					//process.setAttribute("startAt", String.valueOf(wfr.getStartTime().getTime()));
-					/*System.out.println("Process started at " + 
-										dateFormat.format(wfr.getStartTime().getTime()) +
-							            " "+"- Workflow " + wfr.getWorkflow().getName());
-					System.out.println("Status:");*/
-					List<ActionStatusReader> statusSet = wfr.getStatus();
-	
-					for (ActionStatusReader asr : statusSet)
-					{
-						/*Element actionStatus = doc.createElement("actionStatus");
-						process.appendChild(actionStatus);*/
-						ActionStatus as = new ActionStatus();
-						
-						as.setActionName(asr.getActionName());
-						
-						//System.out.print(asr.getActionName()+"\t");
-						if (asr.isTakenInCharge())
-						{
-							/*Element actor = doc.createElement("actor");
-							actionStatus.appendChild(actor);*/
-							Actor act = new Actor();
-							
-							act.setName(asr.getActor().getName());
-							act.setRole(asr.getActor().getRole());
-							
-							as.setActor(act);
-							//actor.setAttribute("name", asr.getActor().getName());
-							//System.out.print(asr.getActor().getName()+"\t\t");
-							/*Element role = doc.createElement("role");
-							role.appendChild(doc.createTextNode(asr.getActor().getRole()));
-							actor.appendChild(role);*/
-						}
-						
-						/*Element actionName = doc.createElement("actionName");
-						actionName.appendChild(doc.createTextNode(asr.getActionName()));
-						actionStatus.appendChild(actionName);*/
+		// Get the list of processes
+		Set<ProcessReader> set = monitor.getProcesses();
 		
-						if (asr.isTerminated())
-							as.setTerminatedAt(String.valueOf(asr.getTerminationTime().getTimeInMillis()));
-							//as.setTerminatedAt(String.valueOf(dateFormat.format(asr.getTerminationTime().getTime())));
-							//actionStatus.setAttribute("terminatedAt", String.valueOf(dateFormat.format(asr.getTerminationTime().getTime())));
-							//System.out.println(dateFormat.format(asr.getTerminationTime().getTime()));
-						
-						ass.add(as);
-					}
-					prc.setActionStatus(ass);
-					ret.add(prc);
-				}
-			}
-			return ret;
-		}
-		catch(Exception ex)
+		// For each process print related data
+		for (ProcessReader wfr: set)
 		{
-			return null;
+			Process pr = new Process();
+			pr.setStartAt(String.valueOf(wfr.getStartTime().getTimeInMillis()));
+			pr.setWorkflowName(wfr.getWorkflow().getName());
+
+			List<ActionStatus> ass = new ArrayList<ActionStatus>();
+			List<ActionStatusReader> statusSet = wfr.getStatus();
+			
+			for (ActionStatusReader asr : statusSet)
+			{
+				ActionStatus as = new ActionStatus();
+				as.setActionName(asr.getActionName());
+				
+				if (asr.isTakenInCharge())
+				{
+					Actor act = new Actor();
+					act.setName(asr.getActor().getName());
+					act.setRole(asr.getActor().getRole());
+					as.setActor(act);
+				}
+
+				if (asr.isTerminated())
+					as.setTerminatedAt(String.valueOf(asr.getTerminationTime().getTimeInMillis()));
+				
+				ass.add(as);
+			}
+			pr.setActionStatus(ass);
+			ret.add(pr);
 		}
+		return ret;
 	}
 
 
-	private WfInfo appendData() {
-		try
+	private WfInfo appendWorkflows() {
+		WfInfo ret = new WfInfo();
+		List<Workflow> wfs = new ArrayList<Workflow>();
+		// Get the list of workflows
+		Set<WorkflowReader> set = monitor.getWorkflows();
+		
+		/* Print the header of the table */
+		
+		// For each workflow print related data
+		for (WorkflowReader wfr: set)
 		{
-			WfInfo ret = new WfInfo();
-			List<Workflow> wfs = new ArrayList<Workflow>();
-			Set<WorkflowReader> set = monitor.getWorkflows();
+			Workflow wf = new Workflow();
+
+			wf.setName(wfr.getName());
+
+			List<Action> acts = new ArrayList<Action>();
+			// Print actions
+			Set<ActionReader> setAct = wfr.getActions();
 			
-			//ret.setXmlns("http://www.w3schools.com");
-			
-			for (WorkflowReader wfr: set)
+			for (ActionReader ar: setAct)
 			{
-				/*Element workflow = doc.createElement("workflow");
-				rootElement.appendChild(workflow);*/
-				Workflow wf = new Workflow();
+				Action act = new Action();
+				act.setAutomInst(String.valueOf(ar.isAutomaticallyInstantiated()));
+				act.setName(ar.getName());
+				act.setRole(ar.getRole());
 				
-				List<Action> acts = new ArrayList<Action>();
-				
-				//workflow.setAttribute("name", wfr.getName());
-				wf.setName(wfr.getName());
-				wf.setProcess(appendProcesses(wfr.getName()));
-				
-				// Print actions
-				//System.out.println("Actions:");
-				Set<ActionReader> setAct = wfr.getActions();
-				//printHeader("Action Name\tRole\t\tAutom.Inst.\tSimple/Process\tWorkflow\tNext Possible Actions");
-				for (ActionReader ar: setAct)
-				{
-					/*Element action = doc.createElement("action");
-					workflow.appendChild(action);*/
-					Action act = new Action();
-					
-					/*Element role = doc.createElement("role");
-					role.appendChild(doc.createTextNode(ar.getRole()));
-					action.appendChild(role);*/
-					act.setRole(ar.getRole());
-					
-					//action.setAttribute("name", ar.getName());
-					act.setName(ar.getName());
-					//action.setAttribute("automInst", String.valueOf(ar.isAutomaticallyInstantiated()));
-					act.setAutomInst(String.valueOf(ar.isAutomaticallyInstantiated()));
-					
-					if (ar instanceof SimpleActionReader)
+				if (ar instanceof SimpleActionReader) {
+					act.setType("simple");
+
+					// Print next actions
+					Set<ActionReader> setNxt = ((SimpleActionReader)ar).getPossibleNextActions();
+					if(!setNxt.isEmpty())
 					{
-						//action.setAttribute("type", "simple");
-						act.setType("simple");
-						
-						Set<ActionReader> setNxt = ((SimpleActionReader)ar).getPossibleNextActions();
-						if(!setNxt.isEmpty())
-						{
-							/*Element followingActions = doc.createElement("followingActions");
-							action.appendChild(followingActions);*/
-							FollowingActions fa = new FollowingActions();
-							List<String> fan = new ArrayList<String>();
-							
-							for (ActionReader nAct: setNxt)
-								fan.add(nAct.getName());
-								/*Element actionName = doc.createElement("actionName");
-								actionName.appendChild(doc.createTextNode(nAct.getName()));
-								followingActions.appendChild(actionName);*/
-							fa.setActionName(fan);
-							act.setFollowingActions(fa);
-						}
+						FollowingActions fa = new FollowingActions();
+						List<String> fas = new ArrayList<String>();
+						for (ActionReader nAct: setNxt)
+							fas.add(nAct.getName());
+						fa.setActionName(fas);
+						act.setFollowingActions(fa);
 					}
-					else if (ar instanceof ProcessActionReader)
-					{
-						//action.setAttribute("type", "process");
-						act.setType("process");
-						act.setNestedWorkflow(((ProcessActionReader)ar).getActionWorkflow().getName());
-						
-						/*Element nestedWorkflow = doc.createElement("nestedWorkflow");
-						nestedWorkflow.setAttribute("workflowName", ((ProcessActionReader)ar).getActionWorkflow().getName());
-						action.appendChild(nestedWorkflow);*/
-					}
-					acts.add(act);
 				}
-				wf.setAction(acts);
-				wfs.add(wf);
+				else if (ar instanceof ProcessActionReader) {
+					act.setType("process");
+					act.setNestedWorkflow(((ProcessActionReader)ar).getActionWorkflow().getName());
+					// print workflow
+				}
+				acts.add(act);
 			}
-			ret.setWorkflow(wfs);
-			return ret;
+			wf.setAction(acts);
+			wfs.add(wf);
 		}
-		catch(Exception ex)
-		{
-			return null;
-		}
+		ret.setWorkflow(wfs);
+		ret.setProcess(appendProcesses());
+		return ret;
 	}
 	
 }
